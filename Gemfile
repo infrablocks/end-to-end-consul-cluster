@@ -1,0 +1,13 @@
+source 'https://rubygems.org'
+
+gem 'rake', '~> 12.3'
+gem 'lino', '~> 1.1'
+gem 'rake_dependencies', '~> 0.15'
+gem 'rake_terraform', '~> 0.20'
+gem 'rake_docker', '~> 0.14'
+gem 'rake_fly', '~> 0.6'
+gem 'confidante', '~> 0.7'
+gem 'docker-api', '~> 1.33'
+gem 'semantic', '~> 1.4', '>= 1.4.1'
+gem 'dotenv', '~> 2.2'
+gem 'activesupport', '~> 5.1', '>= 5.1.1'
