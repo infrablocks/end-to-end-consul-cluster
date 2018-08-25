@@ -18,3 +18,8 @@ network_state_bucket_region: "%{hiera('region')}"
 network_state_bucket_name: "%{hiera('state_bucket_name')}"
 network_state_bucket_is_encrypted: "true"
 network_state_key: "network/deployments/%{hiera('deployment_identifier')}.tfstate"
+
+cluster_state_bucket_region: "%{hiera('region')}"
+cluster_state_bucket_name: "%{hiera('state_bucket_name')}"
+cluster_state_bucket_is_encrypted: "true"
+cluster_state_key: "cluster/deployments/%{hiera('deployment_identifier')}.tfstate"
