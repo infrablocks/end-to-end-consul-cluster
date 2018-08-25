@@ -1,0 +1,16 @@
+data "aws_availability_zones" "all" {}
+
+module "base_network" {
+  source = "infrablocks/base-networking/aws"
+  version = "0.2.2-rc.3"
+
+  component = "${var.component}"
+  deployment_identifier = "${var.deployment_identifier}"
+
+  vpc_cidr = "${var.vpc_cidr}"
+  region = "${var.region}"
+  availability_zones = "${join(",", data.aws_availability_zones.all.names)}"
+
+  private_zone_id = "${data.terraform_remote_state.domain.private_zone_id}"
+  include_lifecycle_events = "no"
+}
