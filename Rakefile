@@ -139,3 +139,27 @@ namespace :cluster do
     end
   end
 end
+
+namespace "image_repository" do
+  RakeTerraform.define_command_tasks do |t|
+    t.argument_names = [:deployment_identifier]
+
+    t.configuration_name = "image repository"
+    t.source_directory = "infra/image_repository"
+    t.work_directory = 'build'
+
+    t.backend_config = lambda do |args|
+      configuration
+          .for_overrides(args)
+          .for_scope(role: "repository")
+          .backend_config
+    end
+
+    t.vars = lambda do |args|
+      configuration
+          .for_overrides(args)
+          .for_scope(role: "repository")
+          .vars
+    end
+  end
+end
