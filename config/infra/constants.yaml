@@ -7,8 +7,6 @@ private_network_cidr: "10.0.0.0/16"
 state_bucket_name: "infrablocks-%{hiera('component')}-%{hiera('deployment_identifier')}"
 secrets_bucket_name: "%{hiera('state_bucket_name')}"
 
-repository_name: "infrablocks/consul"
-
 domain_state_bucket_region: "%{hiera('region')}"
 domain_state_bucket_name: "%{hiera('state_bucket_name')}"
 domain_state_bucket_is_encrypted: "true"
@@ -19,10 +17,15 @@ network_state_bucket_name: "%{hiera('state_bucket_name')}"
 network_state_bucket_is_encrypted: "true"
 network_state_key: "network/deployments/%{hiera('deployment_identifier')}.tfstate"
 
-cluster_state_bucket_region: "%{hiera('region')}"
-cluster_state_bucket_name: "%{hiera('state_bucket_name')}"
-cluster_state_bucket_is_encrypted: "true"
-cluster_state_key: "cluster/deployments/%{hiera('deployment_identifier')}.tfstate"
+service_discovery_cluster_state_bucket_region: "%{hiera('region')}"
+service_discovery_cluster_state_bucket_name: "%{hiera('state_bucket_name')}"
+service_discovery_cluster_state_bucket_is_encrypted: "true"
+service_discovery_cluster_state_key: "service-discovery-cluster/deployments/%{hiera('deployment_identifier')}.tfstate"
+
+application_cluster_state_bucket_region: "%{hiera('region')}"
+application_cluster_state_bucket_name: "%{hiera('state_bucket_name')}"
+application_cluster_state_bucket_is_encrypted: "true"
+application_cluster_state_key: "application-cluster/deployments/%{hiera('deployment_identifier')}.tfstate"
 
 image_repository_state_bucket_region: "%{hiera('region')}"
 image_repository_state_bucket_name: "%{hiera('state_bucket_name')}"

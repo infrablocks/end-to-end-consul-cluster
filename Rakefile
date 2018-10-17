@@ -120,11 +120,11 @@ namespace :network do
   end
 end
 
-namespace :cluster do
+namespace :service_discovery_cluster do
   RakeTerraform.define_command_tasks do |t|
     t.argument_names = [:deployment_identifier]
 
-    t.configuration_name = 'cluster'
+    t.configuration_name = 'service discovery cluster'
     t.source_directory = 'infra/cluster'
     t.work_directory = 'build'
 
@@ -132,109 +132,40 @@ namespace :cluster do
       configuration
           .for_overrides(args)
           .for_scope(
-              role: 'cluster')
+              role: 'service_discovery_cluster')
           .backend_config
     end
 
     t.vars = lambda do |args|
       configuration
           .for_overrides(args)
-          .for_scope(role: 'cluster')
+          .for_scope(role: 'service_discovery_cluster')
           .vars
     end
   end
 end
 
-namespace "image_repository" do
+namespace :application_cluster do
   RakeTerraform.define_command_tasks do |t|
     t.argument_names = [:deployment_identifier]
 
-    t.configuration_name = "image repository"
-    t.source_directory = "infra/image_repository"
+    t.configuration_name = 'application cluster'
+    t.source_directory = 'infra/cluster'
     t.work_directory = 'build'
 
     t.backend_config = lambda do |args|
       configuration
           .for_overrides(args)
-          .for_scope(role: "repository")
+          .for_scope(
+              role: 'application_cluster')
           .backend_config
     end
 
     t.vars = lambda do |args|
       configuration
           .for_overrides(args)
-          .for_scope(role: "repository")
+          .for_scope(role: 'application_cluster')
           .vars
     end
-  end
-end
-
-namespace "image" do
-  RakeDocker.define_image_tasks do |t|
-    t.argument_names = [:deployment_identifier]
-
-    t.image_name = "consul"
-    t.work_directory = 'build/images'
-
-    t.copy_spec = [
-        "src/consul/Dockerfile",
-        "src/consul/entrypoint.sh"
-    ]
-
-    t.create_spec = [
-        {content: version.to_s, to: 'VERSION'},
-        {content: version.to_docker_tag, to: 'TAG'}
-    ]
-
-    t.repository_name = "infrablocks/consul"
-
-    t.repository_url = lambda do |args|
-      backend_config =
-          configuration
-              .for_overrides(args)
-              .for_scope(role: "repository")
-              .backend_config
-
-      TerraformOutput.for(
-          name: 'repository_url',
-          source_directory: "infra/image_repository",
-          work_directory: 'build',
-          backend_config: backend_config)
-    end
-
-    t.credentials = lambda do |args|
-      backend_config =
-          configuration
-              .for_overrides(args)
-              .for_scope(role: "repository")
-              .backend_config
-
-      region =
-          configuration
-              .for_overrides(args)
-              .for_scope(role: "repository")
-              .region
-
-      authentication_factory = RakeDocker::Authentication::ECR.new do |c|
-        c.region = region
-        c.registry_id = TerraformOutput.for(
-            name: 'registry_id',
-            source_directory: "infra/image_repository",
-            work_directory: 'build',
-            backend_config: backend_config)
-      end
-
-      authentication_factory.call
-    end
-
-    t.tags = [version.to_docker_tag, 'latest']
-  end
-
-  desc 'Build and push custom concourse image'
-  task :publish, [:deployment_identifier] do |_, args|
-    Rake::Task["image:clean"].invoke(args.deployment_identifier)
-    Rake::Task["image:build"].invoke(args.deployment_identifier)
-    Rake::Task["image:tag"].invoke(args.deployment_identifier)
-    Rake::Task["image:push"].invoke(args.deployment_identifier)
   end
 end
