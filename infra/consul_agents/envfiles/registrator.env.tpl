@@ -1,0 +1,2 @@
+REGISTRATOR_RESYNC_SECONDS="10"
+REGISTRATOR_REGISTRY_URI="consul://${consul_agent_uri}"

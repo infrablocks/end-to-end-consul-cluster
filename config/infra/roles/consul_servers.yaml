@@ -1,0 +1,45 @@
+---
+vars:
+  region: "%{hiera('region')}"
+  component: "%{hiera('component')}"
+  deployment_identifier: "%{hiera('deployment_identifier')}"
+
+  service_discovery_cluster_component: "%{hiera('component')}-sd"
+
+  private_network_cidr: "%{hiera('private_network_cidr')}"
+
+  service_desired_count: 3
+
+  consul_server_image: "infrablocks/consul-server-aws:0.3.0-rc.30"
+
+  secrets_bucket_name: "%{hiera('secrets_bucket_name')}"
+
+  http_port: "8500"
+  dns_port: "8600"
+  server_port: "8300"
+  serf_lan_port: "8301"
+  serf_wan_port: "8302"
+
+  container_data_directory: '/consul/data'
+  host_data_directory: "/consul/data"
+
+  domain_state_bucket_region: "%{hiera('domain_state_bucket_region')}"
+  domain_state_bucket_name: "%{hiera('domain_state_bucket_name')}"
+  domain_state_bucket_is_encrypted: "%{hiera('domain_state_bucket_is_encrypted')}"
+  domain_state_key: "%{hiera('domain_state_key')}"
+
+  network_state_bucket_region: "%{hiera('network_state_bucket_region')}"
+  network_state_bucket_name: "%{hiera('network_state_bucket_name')}"
+  network_state_bucket_is_encrypted: "%{hiera('network_state_bucket_is_encrypted')}"
+  network_state_key: "%{hiera('network_state_key')}"
+
+  cluster_state_bucket_region: "%{hiera('service_discovery_cluster_state_bucket_region')}"
+  cluster_state_bucket_name: "%{hiera('service_discovery_cluster_state_bucket_name')}"
+  cluster_state_bucket_is_encrypted: "%{hiera('service_discovery_cluster_state_bucket_is_encrypted')}"
+  cluster_state_key: "%{hiera('service_discovery_cluster_state_key')}"
+
+backend_config:
+  region: "%{hiera('consul_servers_state_bucket_region')}"
+  bucket: "%{hiera('consul_servers_state_bucket_name')}"
+  encrypt: "%{hiera('consul_servers_state_bucket_is_encrypted')}"
+  key: "%{hiera('consul_servers_state_key')}"

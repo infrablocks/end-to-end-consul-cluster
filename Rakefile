@@ -11,7 +11,7 @@ version = Version.from_file('build/version')
 
 RakeTerraform.define_installation_tasks(
     path: File.join(Dir.pwd, 'vendor', 'terraform'),
-    version: '0.11.3')
+    version: '0.11.8')
 
 namespace :consul do
   RakeDependencies::Tasks::All.new do |t|
@@ -165,6 +165,56 @@ namespace :application_cluster do
       configuration
           .for_overrides(args)
           .for_scope(role: 'application_cluster')
+          .vars
+    end
+  end
+end
+
+namespace :consul_servers do
+  RakeTerraform.define_command_tasks do |t|
+    t.argument_names = [:deployment_identifier]
+
+    t.configuration_name = 'consul servers'
+    t.source_directory = 'infra/consul_servers'
+    t.work_directory = 'build'
+
+    t.backend_config = lambda do |args|
+      configuration
+          .for_overrides(args)
+          .for_scope(
+              role: 'consul_servers')
+          .backend_config
+    end
+
+    t.vars = lambda do |args|
+      configuration
+          .for_overrides(args)
+          .for_scope(role: 'consul_servers')
+          .vars
+    end
+  end
+end
+
+namespace :consul_agents do
+  RakeTerraform.define_command_tasks do |t|
+    t.argument_names = [:deployment_identifier]
+
+    t.configuration_name = 'consul agents'
+    t.source_directory = 'infra/consul_agents'
+    t.work_directory = 'build'
+
+    t.backend_config = lambda do |args|
+      configuration
+          .for_overrides(args)
+          .for_scope(
+              role: 'consul_agents')
+          .backend_config
+    end
+
+    t.vars = lambda do |args|
+      configuration
+          .for_overrides(args)
+          .for_scope(role: 'consul_agents')
           .vars
     end
   end
