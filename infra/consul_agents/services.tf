@@ -9,6 +9,8 @@ data "template_file" "consul_agent_task_container_definitions" {
     server_port = "${var.server_port}"
     serf_lan_port = "${var.serf_lan_port}"
     serf_wan_port = "${var.serf_wan_port}"
+    component = "${var.component}"
+    deployment_identifier = "${var.deployment_identifier}"
   }
 }
 

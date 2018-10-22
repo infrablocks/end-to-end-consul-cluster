@@ -2,7 +2,7 @@
   {
     "name": "$${name}",
     "image": "$${image}",
-    "memoryReservation": 128,
+    "memoryReservation": 192,
     "essential": true,
     "command": $${command},
     "portMappings": [
@@ -35,7 +35,16 @@
     ],
     "environment": [
       { "name": "ENV_FILE_S3_BUCKET_REGION", "value": "$${region}" },
-      { "name": "ENV_FILE_S3_OBJECT_PATH", "value": "${environment_object_path}" }
+      { "name": "ENV_FILE_S3_OBJECT_PATH", "value": "${environment_object_path}" },
+      { "name": "SERVICE_NAME", "value": "consul-agent" },
+      { "name": "SERVICE_${http_port}_NAME", "value": "consul-agent-http" },
+      { "name": "SERVICE_${dns_port}_NAME", "value": "consul-agent-dns" },
+      { "name": "SERVICE_${server_port}_NAME", "value": "consul-agent-rpc" },
+      { "name": "SERVICE_${serf_lan_port}_NAME", "value": "consul-agent-serf-lan" },
+      { "name": "SERVICE_${serf_wan_port}_NAME", "value": "consul-agent-serf-wan" },
+      { "name": "SERVICE_TAGS", "value": "${component},${deployment_identifier}" },
+      { "name": "SERVICE_COMPONENT", "value": "${component}" },
+      { "name": "SERVICE_DEPLOYMENT_IDENTIFIER", "value": "${deployment_identifier}" }
     ],
     "logConfiguration": {
       "logDriver": "awslogs",
