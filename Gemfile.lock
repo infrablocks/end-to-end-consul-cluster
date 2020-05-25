@@ -57,7 +57,7 @@ GEM
       lino (~> 1.1)
     ruby_fly (0.5.0)
       lino (~> 1.1)
-    rubyzip (1.2.2)
+    rubyzip (2.3.0)
     semantic (1.6.1)
     thread_safe (0.3.6)
     tzinfo (1.2.5)
