@@ -23,7 +23,7 @@ GEM
       excon (>= 0.47.0)
       multi_json
     dotenv (2.5.0)
-    excon (0.62.0)
+    excon (0.73.0)
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
     hiera (3.4.5)
