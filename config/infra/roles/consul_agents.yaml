@@ -6,8 +6,8 @@ vars:
 
   private_network_cidr: "%{hiera('private_network_cidr')}"
 
-  consul_agent_image: "infrablocks/consul-agent-aws:0.3.0-rc.31"
-  registrator_image: "infrablocks/registrator-aws:0.3.0-rc.31"
+  consul_agent_image: "infrablocks/consul-agent-aws:0.13.0"
+  registrator_image: "infrablocks/registrator-aws:0.13.0"
 
   secrets_bucket_name: "%{hiera('secrets_bucket_name')}"
 

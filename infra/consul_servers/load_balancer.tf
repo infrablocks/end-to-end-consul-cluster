@@ -2,28 +2,28 @@ module "classic_load_balancer" {
   source  = "infrablocks/classic-load-balancer/aws"
   version = "0.1.8"
 
-  region = "${var.region}"
-  vpc_id = "${data.terraform_remote_state.network.vpc_id}"
-  subnet_ids = "${split(",", data.terraform_remote_state.network.public_subnet_ids)}"
+  region = var.region
+  vpc_id = data.terraform_remote_state.network.vpc_id
+  subnet_ids = split(",", data.terraform_remote_state.network.public_subnet_ids)
 
-  component = "${var.component}"
-  deployment_identifier = "${var.deployment_identifier}"
+  component = var.component
+  deployment_identifier = var.deployment_identifier
 
-  domain_name = "${data.terraform_remote_state.domain.domain_name}"
-  public_zone_id = "${data.terraform_remote_state.domain.public_zone_id}"
-  private_zone_id = "${data.terraform_remote_state.domain.private_zone_id}"
+  domain_name = data.terraform_remote_state.domain.domain_name
+  public_zone_id = data.terraform_remote_state.domain.public_zone_id
+  private_zone_id = data.terraform_remote_state.domain.private_zone_id
 
   listeners = [
     {
       lb_port = 80
       lb_protocol = "HTTP"
-      instance_port = "${var.http_port}"
+      instance_port = var.http_port
       instance_protocol = "HTTP"
     },
     {
-      lb_port = "${var.serf_lan_port}"
+      lb_port = var.serf_lan_port
       lb_protocol = "TCP"
-      instance_port = "${var.serf_lan_port}"
+      instance_port = var.serf_lan_port
       instance_protocol = "TCP"
     }
   ]
@@ -31,17 +31,17 @@ module "classic_load_balancer" {
   access_control = [
     {
       lb_port = 80
-      instance_port = "${var.http_port}"
+      instance_port = var.http_port
       allow_cidr = "0.0.0.0/0"
     },
     {
-      lb_port = "${var.serf_lan_port}"
-      instance_port = "${var.serf_lan_port}"
+      lb_port = var.serf_lan_port
+      instance_port = var.serf_lan_port
       allow_cidr = "0.0.0.0/0"
     }
   ]
 
-  egress_cidrs = ["${var.private_network_cidr}"]
+  egress_cidrs = [var.private_network_cidr]
 
   health_check_target = "HTTP:${var.http_port}/v1/status/leader"
   health_check_timeout = 10

@@ -10,7 +10,7 @@ vars:
 
   service_desired_count: 3
 
-  consul_server_image: "infrablocks/consul-server-aws:0.3.0-rc.31"
+  consul_server_image: "infrablocks/consul-server-aws:0.13.0"
 
   secrets_bucket_name: "%{hiera('secrets_bucket_name')}"
 
