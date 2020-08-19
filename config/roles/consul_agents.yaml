@@ -2,7 +2,7 @@
 vars:
   region: "%{hiera('region')}"
   component: "%{hiera('component')}"
-  deployment_identifier: "%{hiera('deployment_identifier')}"
+  deployment_identifier: "%{deployment_identifier}"
 
   private_network_cidr: "%{hiera('private_network_cidr')}"
 

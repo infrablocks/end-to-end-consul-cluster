@@ -1,17 +1,16 @@
 module "classic_load_balancer" {
   source  = "infrablocks/classic-load-balancer/aws"
-  version = "0.1.8"
+  version = "1.3.0"
 
-  region = var.region
-  vpc_id = data.terraform_remote_state.network.vpc_id
-  subnet_ids = split(",", data.terraform_remote_state.network.public_subnet_ids)
+  vpc_id = data.terraform_remote_state.network.outputs.vpc_id
+  subnet_ids = data.terraform_remote_state.network.outputs.public_subnet_ids
 
   component = var.component
   deployment_identifier = var.deployment_identifier
 
-  domain_name = data.terraform_remote_state.domain.domain_name
-  public_zone_id = data.terraform_remote_state.domain.public_zone_id
-  private_zone_id = data.terraform_remote_state.domain.private_zone_id
+  domain_name = data.terraform_remote_state.domain.outputs.domain_name
+  public_zone_id = data.terraform_remote_state.domain.outputs.public_zone_id
+  private_zone_id = data.terraform_remote_state.domain.outputs.private_zone_id
 
   listeners = [
     {
@@ -19,12 +18,14 @@ module "classic_load_balancer" {
       lb_protocol = "HTTP"
       instance_port = var.http_port
       instance_protocol = "HTTP"
+      ssl_certificate_id = null
     },
     {
       lb_port = var.serf_lan_port
       lb_protocol = "TCP"
       instance_port = var.serf_lan_port
       instance_protocol = "TCP"
+      ssl_certificate_id = null
     }
   ]
 
@@ -32,12 +33,12 @@ module "classic_load_balancer" {
     {
       lb_port = 80
       instance_port = var.http_port
-      allow_cidr = "0.0.0.0/0"
+      allow_cidrs = ["0.0.0.0/0"]
     },
     {
       lb_port = var.serf_lan_port
       instance_port = var.serf_lan_port
-      allow_cidr = "0.0.0.0/0"
+      allow_cidrs = ["0.0.0.0/0"]
     }
   ]
 

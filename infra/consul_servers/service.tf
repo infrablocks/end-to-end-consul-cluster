@@ -14,11 +14,13 @@ data "template_file" "consul_server_task_container_definitions" {
 
 data "aws_iam_policy_document" "consul_server_assume_role_policy_content" {
   statement {
-    actions = ["sts:AssumeRole"]
+    actions = [
+      "sts:AssumeRole"]
 
     principals {
-      identifiers = ["ecs-tasks.amazonaws.com"]
-      type        = "Service"
+      identifiers = [
+        "ecs-tasks.amazonaws.com"]
+      type = "Service"
     }
 
     effect = "Allow"
@@ -31,7 +33,8 @@ data "aws_iam_policy_document" "consul_server_role_policy_content" {
       "ec2:DescribeInstances",
     ]
 
-    resources = ["*"]
+    resources = [
+      "*"]
   }
 
   statement {
@@ -52,16 +55,16 @@ resource "aws_iam_role" "consul_server_role" {
 }
 
 resource "aws_iam_role_policy" "consul_server_role_policy" {
-  role   = aws_iam_role.consul_server_role.id
+  role = aws_iam_role.consul_server_role.id
   policy = data.aws_iam_policy_document.consul_server_role_policy_content.json
 }
 
 module "consul_server_ecs_service" {
   source = "infrablocks/ecs-service/aws"
-  version = "0.2.0-rc.4"
+  version = "2.5.0"
 
   region = var.region
-  vpc_id = data.terraform_remote_state.network.vpc_id
+  vpc_id = data.terraform_remote_state.network.outputs.vpc_id
 
   component = var.component
   deployment_identifier = var.deployment_identifier
@@ -88,6 +91,6 @@ module "consul_server_ecs_service" {
 
   service_elb_name = module.classic_load_balancer.name
 
-  ecs_cluster_id = data.terraform_remote_state.cluster.ecs_cluster_id
-  ecs_cluster_service_role_arn = data.terraform_remote_state.cluster.ecs_service_role_arn
+  ecs_cluster_id = data.terraform_remote_state.cluster.outputs.ecs_cluster_id
+  ecs_cluster_service_role_arn = data.terraform_remote_state.cluster.outputs.ecs_service_role_arn
 }

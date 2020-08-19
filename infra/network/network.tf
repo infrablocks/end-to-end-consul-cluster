@@ -2,7 +2,7 @@ data "aws_availability_zones" "all" {}
 
 module "base_network" {
   source = "infrablocks/base-networking/aws"
-  version = "0.2.2-rc.3"
+  version = "2.5.0"
 
   component = var.component
   deployment_identifier = var.deployment_identifier
@@ -11,6 +11,6 @@ module "base_network" {
   region = var.region
   availability_zones = data.aws_availability_zones.all.names
 
-  private_zone_id = data.terraform_remote_state.domain.private_zone_id
+  private_zone_id = data.terraform_remote_state.domain.outputs.private_zone_id
   include_lifecycle_events = "no"
 }

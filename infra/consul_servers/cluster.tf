@@ -4,7 +4,7 @@ data "terraform_remote_state" "cluster" {
   config {
     bucket = var.cluster_state_bucket_name
     key = var.cluster_state_key
-    region = var.region
+    region = var.cluster_state_bucket_region
     encrypt = var.cluster_state_bucket_is_encrypted
   }
 }

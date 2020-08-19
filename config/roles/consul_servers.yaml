@@ -2,7 +2,7 @@
 vars:
   region: "%{hiera('region')}"
   component: "%{hiera('component')}"
-  deployment_identifier: "%{hiera('deployment_identifier')}"
+  deployment_identifier: "%{deployment_identifier}"
 
   service_discovery_cluster_component: "%{hiera('component')}-sd"
 
@@ -20,8 +20,8 @@ vars:
   serf_lan_port: "8301"
   serf_wan_port: "8302"
 
-  container_data_directory: '/consul/data'
-  host_data_directory: "/consul/data"
+  container_data_directory: '/opt/consul/data'
+  host_data_directory: "/opt/consul/data"
 
   domain_state_bucket_region: "%{hiera('domain_state_bucket_region')}"
   domain_state_bucket_name: "%{hiera('domain_state_bucket_name')}"

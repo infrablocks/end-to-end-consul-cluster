@@ -24,10 +24,10 @@ data "template_file" "registrator_task_container_definitions" {
 
 module "consul_agent_ecs_service" {
   source = "infrablocks/ecs-service/aws"
-  version = "0.2.0-rc.4"
+  version = "2.5.0"
 
   region = var.region
-  vpc_id = data.terraform_remote_state.network.vpc_id
+  vpc_id = data.terraform_remote_state.network.outputs.vpc_id
 
   component = var.component
   deployment_identifier = var.deployment_identifier
@@ -52,16 +52,16 @@ module "consul_agent_ecs_service" {
 
   attach_to_load_balancer="no"
 
-  ecs_cluster_id = data.terraform_remote_state.cluster.ecs_cluster_id
-  ecs_cluster_service_role_arn = data.terraform_remote_state.cluster.ecs_service_role_arn
+  ecs_cluster_id = data.terraform_remote_state.cluster.outputs.ecs_cluster_id
+  ecs_cluster_service_role_arn = data.terraform_remote_state.cluster.outputs.ecs_service_role_arn
 }
 
 module "registrator_ecs_service" {
   source = "infrablocks/ecs-service/aws"
-  version = "0.2.0-rc.4"
+  version = "2.5.0"
 
   region = var.region
-  vpc_id = data.terraform_remote_state.network.vpc_id
+  vpc_id = data.terraform_remote_state.network.outputs.vpc_id
 
   component = var.component
   deployment_identifier = var.deployment_identifier
@@ -86,7 +86,6 @@ module "registrator_ecs_service" {
 
   attach_to_load_balancer="no"
 
-  ecs_cluster_id = data.terraform_remote_state.cluster.ecs_cluster_id
-  ecs_cluster_service_role_arn = data.terraform_remote_state.cluster.ecs_service_role_arn
+  ecs_cluster_id = data.terraform_remote_state.cluster.outputs.ecs_cluster_id
+  ecs_cluster_service_role_arn = data.terraform_remote_state.cluster.outputs.ecs_service_role_arn
 }
-

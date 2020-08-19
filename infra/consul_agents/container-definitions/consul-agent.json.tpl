@@ -34,8 +34,8 @@
       }
     ],
     "environment": [
-      { "name": "ENV_FILE_S3_BUCKET_REGION", "value": "$${region}" },
-      { "name": "ENV_FILE_S3_OBJECT_PATH", "value": "${environment_object_path}" },
+      { "name": "AWS_S3_BUCKET_REGION", "value": "$${region}" },
+      { "name": "AWS_S3_ENV_FILE_OBJECT_PATH", "value": "${environment_object_path}" },
       { "name": "SERVICE_NAME", "value": "consul-agent" },
       { "name": "SERVICE_${http_port}_NAME", "value": "consul-agent-http" },
       { "name": "SERVICE_${dns_port}_NAME", "value": "consul-agent-dns" },

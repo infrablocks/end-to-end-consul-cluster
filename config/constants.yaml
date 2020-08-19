@@ -20,12 +20,12 @@ network_state_key: "network/deployments/%{hiera('deployment_identifier')}.tfstat
 service_discovery_cluster_state_bucket_region: "%{hiera('region')}"
 service_discovery_cluster_state_bucket_name: "%{hiera('state_bucket_name')}"
 service_discovery_cluster_state_bucket_is_encrypted: "true"
-service_discovery_cluster_state_key: "service-discovery-cluster/deployments/%{hiera('deployment_identifier')}.tfstate"
+service_discovery_cluster_state_key: "service_discovery_cluster/deployments/%{hiera('deployment_identifier')}.tfstate"
 
 application_cluster_state_bucket_region: "%{hiera('region')}"
 application_cluster_state_bucket_name: "%{hiera('state_bucket_name')}"
 application_cluster_state_bucket_is_encrypted: "true"
-application_cluster_state_key: "application-cluster/deployments/%{hiera('deployment_identifier')}.tfstate"
+application_cluster_state_key: "application_cluster/deployments/%{hiera('deployment_identifier')}.tfstate"
 
 consul_servers_state_bucket_region: "%{hiera('region')}"
 consul_servers_state_bucket_name: "%{hiera('state_bucket_name')}"

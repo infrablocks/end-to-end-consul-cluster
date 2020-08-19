@@ -1,15 +1,15 @@
 data "template_file" "consul_agent_env" {
   template = file("${path.root}/envfiles/consul-agent.env.tpl")
 
-  vars {
-    consul_server_address = data.terraform_remote_state.consul_servers.address
+  vars = {
+    consul_server_address = data.terraform_remote_state.consul_servers.outputs.address
   }
 }
 
 data "template_file" "registrator_env" {
   template = file("${path.root}/envfiles/registrator.env.tpl")
 
-  vars {
+  vars = {
     consul_agent_uri = "localhost:${var.http_port}"
   }
 }

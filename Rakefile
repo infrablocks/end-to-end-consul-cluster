@@ -2,6 +2,7 @@ require 'lino'
 require 'confidante'
 require 'rake_terraform'
 require 'rake_docker'
+require 'rake_dependencies'
 
 configuration = Confidante.configuration
 
@@ -10,7 +11,7 @@ RakeTerraform.define_installation_tasks(
     version: '0.12.28')
 
 namespace :consul do
-  RakeDependencies::Tasks::All.new do |t|
+  RakeDependencies.define_tasks do |t|
     t.dependency = 'consul'
     t.version = '1.8.3'
     t.path = 'vendor/consul'
@@ -52,16 +53,17 @@ namespace :bucket do
       configuration_name: 'state bucket',
       argument_names: [:deployment_identifier]
   ) do |t, args|
+    configuration = configuration
+        .for_scope(args.to_h.merge(role: 'state_bucket'))
+
     t.source_directory = 'infra/state_bucket'
     t.work_directory = 'build'
 
     t.state_file =
-        File.join(Dir.pwd, "state/state_bucket/#{args.deployment_identifier}.tfstate")
-
-    t.vars = configuration
-        .for_overrides(args)
-        .for_scope(role: 'state_bucket')
-        .vars
+        File.join(
+            Dir.pwd,
+            "state/state_bucket/#{args.deployment_identifier}.tfstate")
+    t.vars = configuration.vars
   end
 end
 
@@ -70,18 +72,14 @@ namespace :domain do
       configuration_name: 'domain',
       argument_names: [:deployment_identifier, :domain_name]
   ) do |t, args|
+    configuration = configuration
+        .for_scope(args.to_h.merge(role: 'domain'))
+
     t.source_directory = 'infra/domain'
     t.work_directory = 'build'
 
-    t.backend_config = configuration
-        .for_overrides(args)
-        .for_scope(role: 'domain')
-        .backend_config
-
-    t.vars = configuration
-        .for_overrides(args)
-        .for_scope(role: 'domain')
-        .vars
+    t.backend_config = configuration.backend_config
+    t.vars = configuration.vars
   end
 end
 
@@ -90,18 +88,14 @@ namespace :network do
       configuration_name: 'network',
       argument_names: [:deployment_identifier]
   ) do |t, args|
+    configuration = configuration
+        .for_scope(args.to_h.merge(role: 'network'))
+
     t.source_directory = 'infra/network'
     t.work_directory = 'build'
 
-    t.backend_config = configuration
-        .for_overrides(args)
-        .for_scope(role: 'network')
-        .backend_config
-
-    t.vars = configuration
-        .for_overrides(args)
-        .for_scope(role: 'network')
-        .vars
+    t.backend_config = configuration.backend_config
+    t.vars = configuration.vars
   end
 end
 
@@ -110,19 +104,20 @@ namespace :service_discovery_cluster do
       configuration_name: 'service discovery cluster',
       argument_names: [:deployment_identifier]
   ) do |t, args|
+    configuration = configuration
+        .for_scope(args.to_h.merge(role: 'service_discovery_cluster'))
+
     t.source_directory = 'infra/cluster'
     t.work_directory = 'build'
 
-    t.backend_config = configuration
-        .for_overrides(args)
-        .for_scope(role: 'service_discovery_cluster')
-        .backend_config
-
-    t.vars = configuration
-        .for_overrides(args)
-        .for_scope(role: 'service_discovery_cluster')
-        .vars
+    t.backend_config = configuration.backend_config
+    t.vars = configuration.vars
   end
+
+  RakeSSH.define_key_tasks(
+      namespace: :key,
+      path: 'config/secrets/service_discovery_cluster/',
+      comment: 'maintainers@infrablocks.io')
 end
 
 namespace :application_cluster do
@@ -130,19 +125,20 @@ namespace :application_cluster do
       configuration_name: 'application cluster',
       argument_names: [:deployment_identifier]
   ) do |t, args|
+    configuration = configuration
+        .for_scope(args.to_h.merge(role: 'application_cluster'))
+
     t.source_directory = 'infra/cluster'
     t.work_directory = 'build'
 
-    t.backend_config = configuration
-        .for_overrides(args)
-        .for_scope(role: 'application_cluster')
-        .backend_config
-
-    t.vars = configuration
-        .for_overrides(args)
-        .for_scope(role: 'application_cluster')
-        .vars
+    t.backend_config = configuration.backend_config
+    t.vars = configuration.vars
   end
+
+  RakeSSH.define_key_tasks(
+      namespace: :key,
+      path: 'config/secrets/application_cluster/',
+      comment: 'maintainers@infrablocks.io')
 end
 
 namespace :consul_servers do
@@ -150,18 +146,14 @@ namespace :consul_servers do
       configuration_name: 'consul servers',
       argument_names: [:deployment_identifier]
   ) do |t, args|
+    configuration = configuration
+        .for_scope(args.to_h.merge(role: 'consul_servers'))
+
     t.source_directory = 'infra/consul_servers'
     t.work_directory = 'build'
 
-    t.backend_config = configuration
-        .for_overrides(args)
-        .for_scope(role: 'consul_servers')
-        .backend_config
-
-    t.vars = configuration
-        .for_overrides(args)
-        .for_scope(role: 'consul_servers')
-        .vars
+    t.backend_config = configuration.backend_config
+    t.vars = configuration.vars
   end
 end
 
@@ -170,17 +162,13 @@ namespace :consul_agents do
       configuration_name: 'consul agents',
       argument_names: [:deployment_identifier]
   ) do |t, args|
+    configuration = configuration
+        .for_scope(args.to_h.merge(role: 'consul_agents'))
+
     t.source_directory = 'infra/consul_agents'
     t.work_directory = 'build'
 
-    t.backend_config = configuration
-        .for_overrides(args)
-        .for_scope(role: 'consul_agents')
-        .backend_config
-
-    t.vars = configuration
-        .for_overrides(args)
-        .for_scope(role: 'consul_agents')
-        .vars
+    t.backend_config = configuration.backend_config
+    t.vars = configuration.vars
   end
 end
