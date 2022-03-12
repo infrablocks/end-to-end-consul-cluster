@@ -3,12 +3,13 @@ require 'confidante'
 require 'rake_terraform'
 require 'rake_docker'
 require 'rake_dependencies'
+require 'rake_ssh'
 
 configuration = Confidante.configuration
 
 RakeTerraform.define_installation_tasks(
     path: File.join(Dir.pwd, 'vendor', 'terraform'),
-    version: '0.12.28')
+    version: '1.1.7')
 
 namespace :consul do
   RakeDependencies.define_tasks do |t|
