@@ -1,39 +1,27 @@
-data "template_file" "consul_agent_env" {
-  template = file("${path.root}/envfiles/consul-agent.env.tpl")
-
-  vars = {
+locals {
+  consul_agent_env = templatefile("${path.root}/envfiles/consul-agent.env.tpl", {
     consul_server_address = data.terraform_remote_state.consul_servers.outputs.address
-  }
-}
-
-data "template_file" "registrator_env" {
-  template = file("${path.root}/envfiles/registrator.env.tpl")
-
-  vars = {
+  })
+  registrator_env = templatefile("${path.root}/envfiles/registrator.env.tpl", {
     consul_agent_uri = "localhost:${var.http_port}"
-  }
+  })
+
+  consul_agent_environment_object_key = "secrets/environments/consul-agent.env"
+  registrator_environment_object_key = "secrets/environments/registrator.env"
 }
 
-data "template_file" "consul_agent_environment_object_key" {
-  template = "secrets/environments/consul-agent.env"
-}
-
-data "template_file" "registrator_environment_object_key" {
-  template = "secrets/environments/registrator.env"
-}
-
-resource "aws_s3_bucket_object" "consul_agent_env" {
-  key = data.template_file.consul_agent_environment_object_key.rendered
+resource "aws_s3_object" "consul_agent_env" {
+  key = local.consul_agent_environment_object_key
   bucket = var.secrets_bucket_name
-  content = data.template_file.consul_agent_env.rendered
+  content = local.consul_agent_env
 
   server_side_encryption = "AES256"
 }
 
-resource "aws_s3_bucket_object" "registrator_env" {
-  key = data.template_file.registrator_environment_object_key.rendered
+resource "aws_s3_object" "registrator_env" {
+  key = local.registrator_environment_object_key
   bucket = var.secrets_bucket_name
-  content = data.template_file.registrator_env.rendered
+  content = local.registrator_env
 
   server_side_encryption = "AES256"
 }

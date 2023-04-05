@@ -1,6 +1,6 @@
 module "classic_load_balancer" {
   source  = "infrablocks/classic-load-balancer/aws"
-  version = "1.3.0"
+  version = "2.1.0-rc.7"
 
   vpc_id = data.terraform_remote_state.network.outputs.vpc_id
   subnet_ids = data.terraform_remote_state.network.outputs.public_subnet_ids

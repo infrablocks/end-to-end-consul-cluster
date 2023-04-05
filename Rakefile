@@ -13,7 +13,7 @@ configuration = Confidante.configuration
 
 RakeTerraform.define_installation_tasks(
   path: File.join(Dir.pwd, 'vendor', 'terraform'),
-  version: '1.1.7'
+  version: '1.3.6'
 )
 
 RuboCop::RakeTask.new
@@ -31,7 +31,7 @@ end
 namespace :consul do
   RakeDependencies.define_tasks do |t|
     t.dependency = 'consul'
-    t.version = '1.8.3'
+    t.version = '1.14.3'
     t.path = 'vendor/consul'
     t.type = :zip
 
@@ -65,21 +65,22 @@ namespace :consul do
   end
 end
 
-namespace :bucket do
+namespace :bootstrap do
   RakeTerraform.define_command_tasks(
-    configuration_name: 'state bucket',
+    configuration_name: 'bootstrap',
     argument_names: [:deployment_identifier]
   ) do |t, args|
-    configuration = configuration
-                    .for_scope(args.to_h.merge(role: 'state_bucket'))
+    configuration =
+      configuration
+      .for_scope(args.to_h.merge(role: 'bootstrap'))
 
-    t.source_directory = 'infra/state_bucket'
+    t.source_directory = 'infra/bootstrap'
     t.work_directory = 'build'
 
     t.state_file =
       File.join(
         Dir.pwd,
-        "state/state_bucket/#{args.deployment_identifier}.tfstate"
+        "state/bootstrap/#{args.deployment_identifier}.tfstate"
       )
     t.vars = configuration.vars
   end
@@ -90,8 +91,9 @@ namespace :domain do
     configuration_name: 'domain',
     argument_names: %i[deployment_identifier domain_name]
   ) do |t, args|
-    configuration = configuration
-                    .for_scope(args.to_h.merge(role: 'domain'))
+    configuration =
+      configuration
+      .for_scope(args.to_h.merge(role: 'domain'))
 
     t.source_directory = 'infra/domain'
     t.work_directory = 'build'
@@ -106,8 +108,9 @@ namespace :network do
     configuration_name: 'network',
     argument_names: [:deployment_identifier]
   ) do |t, args|
-    configuration = configuration
-                    .for_scope(args.to_h.merge(role: 'network'))
+    configuration =
+      configuration
+      .for_scope(args.to_h.merge(role: 'network'))
 
     t.source_directory = 'infra/network'
     t.work_directory = 'build'
@@ -145,8 +148,9 @@ namespace :application_cluster do
     configuration_name: 'application cluster',
     argument_names: [:deployment_identifier]
   ) do |t, args|
-    configuration = configuration
-                    .for_scope(args.to_h.merge(role: 'application_cluster'))
+    configuration =
+      configuration
+      .for_scope(args.to_h.merge(role: 'application_cluster'))
 
     t.source_directory = 'infra/cluster'
     t.work_directory = 'build'
@@ -167,8 +171,9 @@ namespace :consul_servers do
     configuration_name: 'consul servers',
     argument_names: [:deployment_identifier]
   ) do |t, args|
-    configuration = configuration
-                    .for_scope(args.to_h.merge(role: 'consul_servers'))
+    configuration =
+      configuration
+      .for_scope(args.to_h.merge(role: 'consul_servers'))
 
     t.source_directory = 'infra/consul_servers'
     t.work_directory = 'build'

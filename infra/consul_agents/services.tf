@@ -1,8 +1,6 @@
-data "template_file" "consul_agent_task_container_definitions" {
-  template = file("${path.root}/container-definitions/consul-agent.json.tpl")
-
-  vars = {
-    environment_object_path = "s3://${var.secrets_bucket_name}/${data.template_file.consul_agent_environment_object_key.rendered}"
+locals {
+  consul_agent_task_container_definitions = templatefile("${path.root}/container-definitions/consul-agent.json.tpl", {
+    environment_object_path = "s3://${var.secrets_bucket_name}/${local.consul_agent_environment_object_key}"
     data_mount_point = var.container_data_directory
     http_port = var.http_port
     dns_port = var.dns_port
@@ -11,20 +9,15 @@ data "template_file" "consul_agent_task_container_definitions" {
     serf_wan_port = var.serf_wan_port
     component = var.component
     deployment_identifier = var.deployment_identifier
-  }
-}
-
-data "template_file" "registrator_task_container_definitions" {
-  template = file("${path.root}/container-definitions/registrator.json.tpl")
-
-  vars = {
-    environment_object_path = "s3://${var.secrets_bucket_name}/${data.template_file.registrator_environment_object_key.rendered}"
-  }
+  })
+  registrator_task_container_definitions = templatefile("${path.root}/container-definitions/registrator.json.tpl", {
+    environment_object_path = "s3://${var.secrets_bucket_name}/${local.registrator_environment_object_key}"
+  })
 }
 
 module "consul_agent_ecs_service" {
   source = "infrablocks/ecs-service/aws"
-  version = "2.5.0"
+  version = "4.2.0-rc.8"
 
   region = var.region
   vpc_id = data.terraform_remote_state.network.outputs.vpc_id
@@ -35,7 +28,7 @@ module "consul_agent_ecs_service" {
   service_name = "consul-agents"
   service_image = var.consul_agent_image
 
-  service_task_container_definitions = data.template_file.consul_agent_task_container_definitions.rendered
+  service_task_container_definitions = local.consul_agent_task_container_definitions
   service_task_network_mode = "host"
 
   service_volumes = [
@@ -58,7 +51,7 @@ module "consul_agent_ecs_service" {
 
 module "registrator_ecs_service" {
   source = "infrablocks/ecs-service/aws"
-  version = "2.5.0"
+  version = "4.2.0-rc.8"
 
   region = var.region
   vpc_id = data.terraform_remote_state.network.outputs.vpc_id
@@ -69,7 +62,7 @@ module "registrator_ecs_service" {
   service_name = "registrators"
   service_image = var.registrator_image
 
-  service_task_container_definitions = data.template_file.registrator_task_container_definitions.rendered
+  service_task_container_definitions = local.registrator_task_container_definitions
   service_task_network_mode = "host"
 
   service_volumes = [

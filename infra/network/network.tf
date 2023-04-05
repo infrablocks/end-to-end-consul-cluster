@@ -2,7 +2,7 @@ data "aws_availability_zones" "all" {}
 
 module "base_network" {
   source = "infrablocks/base-networking/aws"
-  version = "2.5.0"
+  version = "5.1.0"
 
   component = var.component
   deployment_identifier = var.deployment_identifier
